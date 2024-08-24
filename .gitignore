@@ -1,3 +1,4 @@
+airflow/
 config_files/
 blobs/*
 .venv/

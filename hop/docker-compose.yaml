@@ -1,0 +1,23 @@
+services:
+  hop-server:
+    image: apache/hop:2.9.0
+    container_name: hop_docker
+    env_file:
+      - .env
+    volumes:
+      - hop_volume:/opt/projetos
+    ports:
+      - "8182:8182"
+    networks:
+      - hop_network
+      - pg_network
+
+networks:
+  hop_network:
+    external: true
+  pg_network:
+    external: true
+
+volumes:
+  hop_volume:
+    external: true

@@ -242,10 +242,7 @@
                 </tr>
                 <tr>
                     <td colspan="4">
-                        <div class="comment">
-                            Providers table PK
-                            <br>
-                        </div>
+                        <div class="comment">Providers table PK</div>
                     </td>
                 </tr>
                 <tr valign="top">

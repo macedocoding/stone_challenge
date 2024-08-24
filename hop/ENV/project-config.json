@@ -1,0 +1,23 @@
+{
+  "variables" : [ {
+    "name" : "host",
+    "value" : "localhost",
+    "description" : ""
+  }, {
+    "name" : "user",
+    "value" : "dbadmin",
+    "description" : ""
+  }, {
+    "name" : "pass",
+    "value" : "postgres",
+    "description" : ""
+  }, {
+    "name" : "db",
+    "value" : "stone_challenge",
+    "description" : ""
+  }, {
+    "name" : "port",
+    "value" : "5432",
+    "description" : ""
+  } ]
+}
