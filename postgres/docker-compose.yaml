@@ -1,0 +1,29 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: pg_docker
+    environment:
+    - POSTGRES_DB=stone_challenge
+    - POSTGRES_USER=dbadmin
+    - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./01-init.sql:/docker-entrypoint-initdb.d/01-init.sql
+      - ./pg_hba.conf:/etc/postgresql/pg_hba.conf
+      - ./postgresql.conf:/etc/postgresql/postgresql.conf
+      - pg_volume:/var/lib/postgresql/data
+    restart: unless-stopped
+    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf",
+               "-c", "hba_file=/etc/postgresql/pg_hba.conf",]
+    networks:
+      - pg_network
+    ports:
+      - "5432:5432"
+
+volumes:
+  pg_volume:
+    name: pg_volume
+
+networks:
+  pg_network:
+    name: pg_network
+    external: true

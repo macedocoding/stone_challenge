@@ -1,7 +1,7 @@
 # Desafio técnico Stone
 
 Desafio técnico relativo ao processo seletivo da empresa Stone para o cargo de estagiário de Engenharia de Dados.
-A disponibilização dos serviços utilizados será feita por meio de containeres Docker, portanto é fundamental a instalação do Docker Engine e Docker Compose v2.
+A disponibilização dos serviços utilizados será feita por meio de Docker e serviços em nuvem do provedor GCP, portanto é fundamental a instalação do Docker Engine e Docker Compose v2, além de ter uma conta na Google Cloud Provider com um projeto previamente criado e um bucket no Google Storage.
 
 [Instalação Docker Engine/Docker Compose](https://docs.docker.com/engine/install/)
 
@@ -13,6 +13,14 @@ Após isso, [ative o ambiente](https://docs.python.org/3/library/venv.html) conf
 
 ### Requerimentos
 As bibliotecas Python utilizadas foram listadas no arquivo `requirements.txt` e podem ser instaladas através do comando `$ pip install -r requirements.txt`.
+
+### gcloud
+É necessária a instalação da Google Cloud CLI para facilitarmos o processo de autenticação local.
+Para isso, é só seguir o [tutorial](https://cloud.google.com/sdk/docs/install?hl=pt-br) para seu sistema operacional.
+
+### Autenticação GCP
+Para esta solução, utilizaremos a chave de autenticação JSON da sua conta GCP que deve ser baixada e salva no endereço seguinte (a partir do diretório clonado) `stone_challenge/hop/ENV/key.json`.
+Além disso, a partir de seu terminal, digite `$ gcloud auth login` e siga as instruções, lembrando que já deve ter em mãos o ID do projeto criado na cloud.
 
 ### Criação dos volumes e redes no Docker
 Para garantir a persistência dos dados, devemos criar volumes lógicos que serão mapeados dentro do container de cada serviço, já as redes garantem a comunicação entre os containeres durante a execução do pipeline.
@@ -29,21 +37,16 @@ $ docker network create pg_network
 $ docker network create hop_network
 ```
 
-### Solução OLTP local em Postgres
+## Solução OLTP local em Postgres
 Após criar um ambiente virtual Python, acesse a pasta `postgres` e rode o comando `docker compose -f docker-compose.yaml up -d`.
 
-Isso vai levantar um container Docker Postgres e executará as queries de criação das tabelas.
+Isso vai levantar um container Docker Postgres e executará as queries de criação das tabelas em segundo plano.
 Lembrando que a documentação (HTML) e o arquivo de modelagem lógica do SQL Power Architect estão disponíveis no diretório `modeling`.
 
-### Apache Hop
-Para a instalação do Apache Hop em Docker, acesse o diretório `hop` e execute o comando `docker compose -f docker-compose.yaml up -d`
+## Apache Airflow
+Apache Airflow já foi previamente instalado com o comando `$ pip install -r requirements.txt`, porém é importante apontar a variável de ambiente `AIRFLOW_HOME` para o diretório `airflow` na raíz do projeto através do comando `$ export AIRFLOW_HOME=projeto/clonado/airflow`.Por último, digite `$ airflow standalone` para inicializar o banco de dados, criar um usuário e iniciar todos os componentes do Airflow.
 
-Isso vai levantar um container Docker com Apache Hop, uma ferramenta de ETL low code muito versátil e open source.
-
-### Apache Airflow
-Apache Airflow já foi previamente instalado com o comando `$ pip install -r rquirements.txt`, porém é importante apontar a variável de ambiente `AIRFLOW_AIRFLOW` para o diretório `airflow` na raíz do projeto através do comando `$ export AIRFLOW_HOME=./airflow`.Por último, digite `$ airflow standalone` para inicializar o banco de dados, criar um usuário e iniciar todos os componentes do Airflow.
-
-A interface gráfica pode ser acessada através de um navegador, digitando-se `localhost:8080` na barra de endereço. O usuário padrão é `admin` e a senha é fornecida no próprio terminal no final da inicialização.
+A interface gráfica pode ser acessada através de um navegador, digitando-se `localhost:8081` na barra de endereço. O usuário padrão é `admin` e a senha é fornecida no próprio terminal ao final da inicialização.
 
 Para mais detalhes, acesse o [guia de início rápido do Airflow](https://airflow.apache.org/docs/apache-airflow/stable/start.html).
 
@@ -58,3 +61,15 @@ dag_dir_list_interval = 20
 ```
 Após isso, reinicie o Apache Airflow.
 
+## Apache Hop Web
+Para a instalação do Apache Hop Web em Docker, acesse o diretório `hop` e execute o comando `docker compose -f docker-compose.yaml up -d`
+
+Isso vai levantar um container Docker com Apache Hop na versão Web, uma ferramenta de ETL low code muito versátil e open source onde serão feitas as transformações necessárias nos dados e sua persistência no bucket.
+
+### ETL no Apache Hop Web
+Para acessar a interface gráfica do Apache Hop Web, digite em seu navegador `localhost:8080`.
+Após isso, feche a tela de boas vindas e selecione o projeto `stone_challenge` na parte superior esquerda da aplicação. Automaticamente, o ambiente `DEV` com as configurações necessárias, como conexão com Postgres e Storage será selecionado automaticamente.
+Após isso, clique em `Open` no canto superior esquerdo, e selecione `ETL/workflow.hwf`.
+Por último clique no pequeno triângulo no canto superior esquerdo da tela para iniciar a execução do workflow.
+
+## Metabase

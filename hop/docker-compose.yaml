@@ -1,23 +1,28 @@
 services:
-  hop-server:
-    image: apache/hop:2.9.0
+  hop_docker:
+    image: apache/hop-web:2.9.0
     container_name: hop_docker
     env_file:
       - .env
     volumes:
-      - hop_volume:/opt/projetos
-    ports:
-      - "8182:8182"
+      - .:/files
+      - ./drivers/postgresql-42.7.4.jar:/usr/local/tomcat/lib/postgresql-42.7.4.jar
     networks:
       - hop_network
       - pg_network
+    ports:
+      - 8080:8080
+      - 8181:8181
+      - 8180:8180
 
 networks:
   hop_network:
+    name: hop_network
     external: true
   pg_network:
+    name: pg_network
     external: true
 
 volumes:
   hop_volume:
-    external: true
+    name: hop_volume
