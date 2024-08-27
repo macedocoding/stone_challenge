@@ -1,5 +1,4 @@
 airflow/
-config_files/
 blobs/*
 .venv/
 .tool-versions
