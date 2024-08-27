@@ -5,6 +5,8 @@ A disponibilização dos serviços utilizados será feita por meio de Docker e s
 
 [Instalação Docker Engine/Docker Compose](https://docs.docker.com/engine/install/)
 
+(Disponibilizei um notebook com os scripts Python para maior facilidade de leitura do código)
+
 ## Instalação e configuração do ambiente
 
 ### Ambiente Python
@@ -72,4 +74,13 @@ Após isso, feche a tela de boas vindas e selecione o projeto `stone_challenge` 
 Após isso, clique em `Open` no canto superior esquerdo, e selecione `ETL/workflow.hwf`.
 Por último clique no pequeno triângulo no canto superior esquerdo da tela para iniciar a execução do workflow.
 
+## Data Warehouse no Bigquery
+Com os arquivos parquet salvos no seu bucket, representando tabelas de um banco de dados desnormalizado e otimizado para queries de recuperação de dados, é possível acessar o Bigquery e criar tabelas a partir de cada um desses arquivos. Temos, então um protótipo de Data Warehouse que pode ser acessado por diversas ferramentas de Analytics para análise de tomada de decisão.
+
 ## Metabase
+Uma excelente ferramenta de self-service BI open source é o Metabase, que possui integração nativa com Bigquery e roda no navegador.
+Para levantarmos um container básico do Metabase é só digitar `docker run -d -p 3000:3000 --name metabase metabase/metabase-enterprise` e, em seguida, acessar do seu navegador `localhost:3000`.
+Quando acessar a interface gráfica, basta seguir os passos para criar uma conta e conectar ao seu bigquery de forma muito compreensível.
+
+# Futuras melhorias
+Uma abordagem mais integrada ao Airflow pode ser mais interessante para o gerenciamento dos serviços que compõe o pipeline.
