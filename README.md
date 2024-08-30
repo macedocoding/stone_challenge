@@ -5,8 +5,6 @@ A disponibilização dos serviços utilizados será feita por meio de Docker e s
 
 [Instalação Docker Engine/Docker Compose](https://docs.docker.com/engine/install/)
 
-(Disponibilizei um notebook com os scripts Python para maior facilidade de leitura do código)
-
 ## Instalação e configuração do ambiente
 
 ### Ambiente Python
@@ -46,22 +44,11 @@ Isso vai levantar um container Docker Postgres e executará as queries de criaç
 Lembrando que a documentação (HTML) e o arquivo de modelagem lógica do SQL Power Architect estão disponíveis no diretório `modeling`.
 
 ## Apache Airflow
-Apache Airflow já foi previamente instalado com o comando `$ pip install -r requirements.txt`, porém é importante apontar a variável de ambiente `AIRFLOW_HOME` para o diretório `airflow` na raíz do projeto através do comando `$ export AIRFLOW_HOME=projeto/clonado/airflow`.Por último, digite `$ airflow standalone` para inicializar o banco de dados, criar um usuário e iniciar todos os componentes do Airflow.
+Apache Airflow já foi previamente instalado com o comando `$ pip install -r requirements.txt`, porém é importante apontar a variável de ambiente `AIRFLOW_HOME` para o diretório `airflow` (que ja possui um arquivo de configuração e a dag) na raíz do projeto através do comando `$ export AIRFLOW_HOME=projeto/clonado/airflow`. or último, digite `$ airflow standalone` para inicializar o banco de dados, criar um usuário e iniciar todos os componentes do Airflow.
 
 A interface gráfica pode ser acessada através de um navegador, digitando-se `localhost:8081` na barra de endereço. O usuário padrão é `admin` e a senha é fornecida no próprio terminal ao final da inicialização.
 
 Para mais detalhes, acesse o [guia de início rápido do Airflow](https://airflow.apache.org/docs/apache-airflow/stable/start.html).
-
-#### Configurações Apache Airflow
-Algumas configurações precisam ser feitas no arquivo `airflow/airflow.cfg` a fim de facilitarmos a execução das tasks. Para isso, abra o arquivo de configuração citado, procure pelas variáveis de ambiente abaixo e altere seus valores:
-
-```
-load_examples = False
-min_file_process_interval = 5
-expose_config = True
-dag_dir_list_interval = 20
-```
-Após isso, reinicie o Apache Airflow.
 
 ## Apache Hop Web
 Para a instalação do Apache Hop Web em Docker, acesse o diretório `hop` e execute o comando `docker compose -f docker-compose.yaml up -d`
