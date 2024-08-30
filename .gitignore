@@ -1,2 +1,3 @@
 .venv/
 .tool-versions
+/hop/ENV/key.json
