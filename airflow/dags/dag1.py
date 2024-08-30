@@ -11,8 +11,8 @@ from google.cloud import storage
 
 YESTERDAY = datetime.now() - timedelta(days=1)
 BUCKET_NAME = 'desafio-eng-dados'
-LOCAL_PATH = os.path.join(os.path.abspath(os.path.join(os.getcwd(), '../../')), 'blobs')
-PREFIX = '2024'
+LOCAL_PATH = os.path.join(os.getcwd(), 'blobs')
+PREFIX = str(datetime.now().year)
 
 
 default_args = {
@@ -45,7 +45,7 @@ with DAG(
 
 
     def duckdb_insert():
-        load_dotenv('/home/macedo/Projetos/stone_challenge/config_files/conf.env')
+        load_dotenv(os.path.join(os.getcwd(), 'config_files/conf.env'))
         conn = duckdb.connect()
 
         user = os.getenv('DB_USER')
@@ -53,11 +53,12 @@ with DAG(
         host = os.getenv('DB_HOST')
         port = os.getenv('DB_PORT')
         dbname = os.getenv('DB_NAME')
+        parquet_path = str(os.path.join(os.getcwd(), 'blobs/2024*'))
 
         conn.execute(f"ATTACH 'postgresql://{user}:{password}@{host}:{port}/{dbname}' AS db (TYPE POSTGRES);")
-        conn.execute("""
+        conn.execute(f"""
             CREATE OR REPLACE TEMP TABLE original AS
-            SELECT * FROM read_parquet('/home/macedo/Projetos/stone_challenge/blobs/2024*')
+            SELECT * FROM read_parquet('{parquet_path}')
             """)
         
         conn.execute("""
@@ -128,6 +129,5 @@ with DAG(
         task_id='duckdb_insert_task',
         python_callable=duckdb_insert,
         dag=dag)
-
 
 download_blobs_task >> duckdb_insert_task

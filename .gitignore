@@ -1,4 +1,2 @@
-airflow/
-blobs/*
 .venv/
 .tool-versions
